@@ -10,3 +10,9 @@ SPL --->
 | fields - _time
 
 
+DQL --->
+describe logs
+
+SPL --->
+
+index=main source="Linux.log" | fieldsummary
