@@ -51,4 +51,5 @@ SPL ---> index=main source="Linux.log" | stats count
 DQL ---> data record (value=2), record(value=3), record(value=4) | summarize max(value), min(value), median(value)
 SPL ---> | makeresults count=3 | streamstats count | eval number = case(count=1,2, count=2, 3, count=3, 4) | stats max(number) as total_number, min(number) as total_avg
 
-
+DQL ---> data record (value=2), record(value=3), record(value=4) | summarize takeFirst(value), takeLast(value)
+SQL ---> | makeresults count=3 | streamstats count | eval number = case(count=1,2, count=2, 3, count=3, 4) | stats first(number) as first_number, last(number) as last_number
