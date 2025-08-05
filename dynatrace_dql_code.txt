@@ -31,3 +31,12 @@ SPL ---> index=main source="linux.log" | stats count as total_count
 DQL ---> fetch logs| filter log.source == "linux.log" | summarize count() ,by:status
 
 fetch logs| filter log.source == "linux.log" | summarize count() ,by:{status == "NONE"}
+
+DQL ---> data record (value=2), record(value=3), record(value=4)| summarize total_sum = sum(value), total_avg = avg(value)
+
+SPL ---> | makeresults count=3 
+| streamstats count 
+| eval number = case(count=1,2, count=2, 3, count=3, 4) 
+| stats sum(number) as total_number, avg(number) as total_avg
+
+
