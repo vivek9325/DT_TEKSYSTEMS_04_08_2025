@@ -16,3 +16,9 @@ describe logs
 SPL --->
 
 index=main source="Linux.log" | fieldsummary
+
+
+DQL ---> fetch logs, from:-24h ,to:-2h
+SPL---> index=main sourcetype="linux_log" earliest=-24h latest=-2h
+
+DQL ---> fetch logs, from:-24h ,to:-2h, samplingRatio:1000
