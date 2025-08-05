@@ -26,3 +26,8 @@ DQL ---> fetch logs, from:-24h ,to:-2h, samplingRatio:1000
 
 DQL ---> fetch logs| filter log.source == "linux.log" | summarize total_count = count()
 SPL ---> index=main source="linux.log" | stats count as total_count
+
+
+DQL ---> fetch logs| filter log.source == "linux.log" | summarize count() ,by:status
+
+fetch logs| filter log.source == "linux.log" | summarize count() ,by:{status == "NONE"}
