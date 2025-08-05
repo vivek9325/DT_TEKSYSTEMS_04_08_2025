@@ -1,0 +1,12 @@
+fetch logs
+| filter log.source=="linux.log"
+
+DQl --->
+data record(text="Vivek,search,savedsearch")
+
+SPL --->
+| makeresults 
+| eval text="Vivek,search,savedsearch" 
+| fields - _time
+
+
