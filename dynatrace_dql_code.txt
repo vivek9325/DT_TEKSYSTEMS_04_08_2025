@@ -39,4 +39,8 @@ SPL ---> | makeresults count=3
 | eval number = case(count=1,2, count=2, 3, count=3, 4) 
 | stats sum(number) as total_number, avg(number) as total_avg
 
+DQL ---> fetch logs | filter log.source=="linux.log" | summarize dc_count=countDistinctExact(status)
+
+DQL ---> fetch logs  | summarize unique_source_count=countDistinctExact(log.source)
+SPL ---> index=main | stats dc(source) as unique_source
 
