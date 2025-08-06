@@ -99,3 +99,7 @@ SQL ---> index=_internal | stats count by sourcetype | head 3
 
 DQL ---> data record (a=2), record(a=3), record(a=7), record(a=1), record(a=5) | sort  a
 data record (a=2), record(a=3), record(a=7), record(a=1), record(a=5) | sort - a
+
+DQL ---> data record(a=30,b="%")| fieldsAdd concat(a," ",b)
+SPL ---> |makeresults| eval a=30, b="%" | eval concatenation = a." ".b
+
