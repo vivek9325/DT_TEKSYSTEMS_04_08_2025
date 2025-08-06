@@ -53,3 +53,15 @@ SPL ---> | makeresults count=3 | streamstats count | eval number = case(count=1,
 
 DQL ---> data record (value=2), record(value=3), record(value=4) | summarize takeFirst(value), takeLast(value)
 SQL ---> | makeresults count=3 | streamstats count | eval number = case(count=1,2, count=2, 3, count=3, 4) | stats first(number) as first_number, last(number) as last_number
+
+DQL ---> data record (value=2), record(value=3), record(value=4) | summarize collectArray(value), collectArray(value, maxLength:1)
+SQL ---> | makeresults count=3 | streamstats count as id | eval value=case(id=1, 2, id=2, 3, id=3, 4) | stats list(value) as collect_array | eval collect_array=mvindex(collect_array, 0, 1)
+
+| makeresults | eval a = "2,3,4" | eval full_array = split(a,",") | eval max_array = mvindex(full_array,0,0)
+
+
+DQL ---> fetch logs| sort timestamp desc|dedup status
+
+DQL ---> fetch logs| filterOut log.source == "linux.log" | summarize count() ,by:log.source
+SPL ---> index=main source!="Linux.log" | stats count by source
+
