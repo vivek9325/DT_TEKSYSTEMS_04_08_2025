@@ -114,3 +114,8 @@ DQL ---> data record(str="DQL is awesome")| fieldsAdd like(str,"D%"), like(str,"
 
 DQL ---> data record(str="DQL is awesome")| fieldsAdd matchesPhrase(str,"DQL"), matchesPhrase(str,"dql", caseSensitive:true)
 
+DQL ---> data record(str="DQL is awesome")| fieldsAdd matchesPhrase(str,"DQL"), matchesPhrase(str,"dql", caseSensitive:true), matchesValue(str,"DQL*"), matchesValue(str,"dql*", caseSensitive:true)
+
+DQL ---> data record(str="DQL is awesome")| fieldsAdd  replaceString(str,"awesome","simple")
+SPL ---> | makeresults| eval s1="DQL is Awesome"| eval replace_s1 = replace(s1,"Awesome","Simple")
+
