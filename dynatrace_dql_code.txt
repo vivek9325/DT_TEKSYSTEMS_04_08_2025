@@ -1,21 +1,12 @@
 fetch logs
 | filter log.source=="linux.log"
 
-DQl --->
-data record(text="Vivek,search,savedsearch")
-
-SPL --->
-| makeresults 
-| eval text="Vivek,search,savedsearch" 
-| fields - _time
+DQl --->data record(text="Vivek,search,savedsearch")
+SPL --->| makeresults | eval text="Vivek,search,savedsearch" | fields - _time
 
 
-DQL --->
-describe logs
-
-SPL --->
-
-index=main source="Linux.log" | fieldsummary
+DQL --->describe logs
+SPL --->index=main source="Linux.log" | fieldsummary
 
 
 DQL ---> fetch logs, from:-24h ,to:-2h
@@ -33,11 +24,8 @@ DQL ---> fetch logs| filter log.source == "linux.log" | summarize count() ,by:st
 fetch logs| filter log.source == "linux.log" | summarize count() ,by:{status == "NONE"}
 
 DQL ---> data record (value=2), record(value=3), record(value=4)| summarize total_sum = sum(value), total_avg = avg(value)
+SPL ---> | makeresults count=3 | streamstats count | eval number = case(count=1,2, count=2, 3, count=3, 4) | stats sum(number) as total_number, avg(number) as total_avg
 
-SPL ---> | makeresults count=3 
-| streamstats count 
-| eval number = case(count=1,2, count=2, 3, count=3, 4) 
-| stats sum(number) as total_number, avg(number) as total_avg
 
 DQL ---> fetch logs | filter log.source=="linux.log" | summarize dc_count=countDistinctExact(status)
 
@@ -48,11 +36,14 @@ SPL ---> index=main | stats dc(source) as unique_source
 DQL ---> fetch logs  | summarize total_count = countIf(log.source=="linux.log")
 SPL ---> index=main source="Linux.log" | stats count
 
+
 DQL ---> data record (value=2), record(value=3), record(value=4) | summarize max(value), min(value), median(value)
 SPL ---> | makeresults count=3 | streamstats count | eval number = case(count=1,2, count=2, 3, count=3, 4) | stats max(number) as total_number, min(number) as total_avg
 
+
 DQL ---> data record (value=2), record(value=3), record(value=4) | summarize takeFirst(value), takeLast(value)
 SQL ---> | makeresults count=3 | streamstats count | eval number = case(count=1,2, count=2, 3, count=3, 4) | stats first(number) as first_number, last(number) as last_number
+
 
 DQL ---> data record (value=2), record(value=3), record(value=4) | summarize collectArray(value), collectArray(value, maxLength:1)
 SQL ---> | makeresults count=3 | streamstats count as id | eval value=case(id=1, 2, id=2, 3, id=3, 4) | stats list(value) as collect_array | eval collect_array=mvindex(collect_array, 0, 1)
@@ -94,8 +85,10 @@ DQL ---> fetch logs | dedup status | fields status |fieldsAdd state=if(status=="
 DQL ---> data record(name="Vivek")| fieldsAdd hashCrc32(name), hashMd5(name),hashSha1(name), hashSha256(name), hashSha512(name)
 SPL ---> | makeresults | eval name="Vivek"| eval md5 = md5(name),sha1 = sha1(name),Sha256 = sha256(name),Sha512 = sha512(name)
 
+
 DQL ---> data record (a=2), record(a=3), record(a=7), record(a=1), record(a=5) | limit 3
 SQL ---> index=_internal | stats count by sourcetype | head 3
+
 
 DQL ---> data record (a=2), record(a=3), record(a=7), record(a=1), record(a=5) | sort  a
 data record (a=2), record(a=3), record(a=7), record(a=1), record(a=5) | sort - a
@@ -103,12 +96,21 @@ data record (a=2), record(a=3), record(a=7), record(a=1), record(a=5) | sort - a
 DQL ---> data record(a=30,b="%")| fieldsAdd concat(a," ",b)
 SPL ---> |makeresults| eval a=30, b="%" | eval concatenation = a." ".b
 
+
 DQL ---> fetch logs| filter contains(log.source,"linux")
 SPL ---> index=main source=*linux*
 
 DQL ---> data record(content="Dyntrace query language") | fieldsAdd endsWith(content,"Language", caseSensitive:false), endsWith(content,"Language")
 SPL ---> | makeresults | eval TEK = "DQL ODI" | eval ends_with_ODI = if(match(TEK, "ODI"), "true", "false") | eval ends_with_ci = if(match(lower(TEK),"odi"),"true","false")
 
+
 DQL ---> data record(str="DQL is awesome")| fieldsAdd first_char = getCharacter(str,0),last_char = getCharacter(str,-1),
         middle_char= getCharacter(str,7)
 SPL ---> | makeresults| eval s1="DQL is Awesome"|eval s2="Dynatrace Query Language"| eval v1=substr(s1, 1, 1), v2=substr(s1, 9, 1)| eval v3=substr(s2, 1, 1), v4=substr(s2, 5, 1)| table s1,s2, v1, v2, v3, v4
+
+
+DQL ---> data record(str="DQL is awesome")| fieldsAdd like(str,"D%"), like(str,"%D%X")
+
+
+DQL ---> data record(str="DQL is awesome")| fieldsAdd matchesPhrase(str,"DQL"), matchesPhrase(str,"dql", caseSensitive:true)
+
