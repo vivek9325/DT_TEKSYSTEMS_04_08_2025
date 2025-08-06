@@ -91,3 +91,5 @@ SQL ---> | makeresults | eval event="Lets find a product", status="Missing" | ev
 
 DQL ---> fetch logs | dedup status | fields status |fieldsAdd state=if(status=="ERROR","Critical"), state2=if(status=="INFO","Information"), state3=if(status=="NONE","Low"), state4=if(status=="WARN","High") |fieldsAdd final_status=coalesce(state,state2,state3,state4) | fieldsRename intial_status=status, `final status`=final_status
 
+DQL ---> data record(name="Vivek")| fieldsAdd hashCrc32(name), hashMd5(name),hashSha1(name), hashSha256(name), hashSha512(name)
+SPL ---> | makeresults | eval name="Vivek"| eval md5 = md5(name),sha1 = sha1(name),Sha256 = sha256(name),Sha512 = sha512(name)
