@@ -71,3 +71,6 @@ SPL ---> index=main source="Linux.log" | search *linux*
 DQL ---> fetch logs| filter log.source=="linux.log" | fields event.type, log.source, status
 SPL ---> index=main source="Linux.log" |table source, host, sourcetype
 
+DQL ---> data record(event = "Lets find a product",status="Missing")| fieldsAdd event_upper = upper(event), lower_case_status=lower(status)
+SPL ---> | makeresults | eval event="Lets find a product", status="Missing" | eval event_upper=upper(event), lower_case_status=lower(status) | fields - _time
+
