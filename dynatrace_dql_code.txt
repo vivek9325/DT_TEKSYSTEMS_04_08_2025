@@ -103,3 +103,12 @@ data record (a=2), record(a=3), record(a=7), record(a=1), record(a=5) | sort - a
 DQL ---> data record(a=30,b="%")| fieldsAdd concat(a," ",b)
 SPL ---> |makeresults| eval a=30, b="%" | eval concatenation = a." ".b
 
+DQL ---> fetch logs| filter contains(log.source,"linux")
+SPL ---> index=main source=*linux*
+
+DQL ---> data record(content="Dyntrace query language") | fieldsAdd endsWith(content,"Language", caseSensitive:false), endsWith(content,"Language")
+SPL ---> | makeresults | eval TEK = "DQL ODI" | eval ends_with_ODI = if(match(TEK, "ODI"), "true", "false") | eval ends_with_ci = if(match(lower(TEK),"odi"),"true","false")
+
+DQL ---> data record(str="DQL is awesome")| fieldsAdd first_char = getCharacter(str,0),last_char = getCharacter(str,-1),
+        middle_char= getCharacter(str,7)
+SPL ---> | makeresults| eval s1="DQL is Awesome"|eval s2="Dynatrace Query Language"| eval v1=substr(s1, 1, 1), v2=substr(s1, 9, 1)| eval v3=substr(s2, 1, 1), v4=substr(s2, 5, 1)| table s1,s2, v1, v2, v3, v4
