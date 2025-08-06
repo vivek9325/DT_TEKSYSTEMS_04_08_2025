@@ -87,3 +87,7 @@ Approach2 ---> fetch logs | dedup status | fields status |fieldsAdd state=if(sta
 
 DQL ---> fetch logs | dedup status | fields status |fieldsAdd state=if(status=="ERROR","Critical"), state2=if(status=="INFO","Information"), state3=if(status=="NONE","Low"), state4=if(status=="WARN","High") |fieldsAdd final_status=coalesce(state,state2,state3,state4) | fieldsRemove state, state2, state3, state4
 SQL ---> | makeresults | eval event="Lets find a product", status="Missing" | eval event_upper=upper(event), lower_case_status=lower(status) | fields - _time
+
+
+DQL ---> fetch logs | dedup status | fields status |fieldsAdd state=if(status=="ERROR","Critical"), state2=if(status=="INFO","Information"), state3=if(status=="NONE","Low"), state4=if(status=="WARN","High") |fieldsAdd final_status=coalesce(state,state2,state3,state4) | fieldsRename intial_status=status, `final status`=final_status
+
