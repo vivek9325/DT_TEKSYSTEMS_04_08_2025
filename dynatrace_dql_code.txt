@@ -68,3 +68,6 @@ SPL ---> index=main source!="Linux.log" | stats count by source
 DQL ---> fetch logs| search "ERROR"
 SPL ---> index=main source="Linux.log" | search *linux*
 
+DQL ---> fetch logs| filter log.source=="linux.log" | fields event.type, log.source, status
+SPL ---> index=main source="Linux.log" |table source, host, sourcetype
+
