@@ -74,3 +74,14 @@ SPL ---> index=main source="Linux.log" |table source, host, sourcetype
 DQL ---> data record(event = "Lets find a product",status="Missing")| fieldsAdd event_upper = upper(event), lower_case_status=lower(status)
 SPL ---> | makeresults | eval event="Lets find a product", status="Missing" | eval event_upper=upper(event), lower_case_status=lower(status) | fields - _time
 
+DQL ---> fetch logs| dedup status | fieldsAdd state = if(status=="ERROR","Problem", else:"Normal")
+SPL ---> index=main | dedup status| eval state=if(status=="ERROR", "Problem", "Normal")| table status, state
+
+DQL ---> data record(a="a", b="b", c="c"), record(b="b", c="c"), record(c="c"), record()| fieldsAdd coalesce(a,b,c)
+
+
+DQL ---> 
+Approach1 ---> fetch logs| fields loglevel| dedup loglevel| fieldsAdd New_status = if(loglevel == "ERROR", "Critical", else:if(loglevel == "INFO", "Information", else:if(loglevel == "NONE", "Low", else:if(loglevel == "WARN", "High", else:loglevel))))
+
+Approach2 ---> fetch logs | dedup status | fields status |fieldsAdd state=if(status=="ERROR","Critical"), state2=if(status=="INFO","Information"), state3=if(status=="NONE","Low"), state4=if(status=="WARN","High")|fieldsAdd final_status=coalesce(state,state2,state3,state4) 
+
