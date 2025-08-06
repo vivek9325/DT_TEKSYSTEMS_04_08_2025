@@ -65,3 +65,6 @@ DQL ---> fetch logs| sort timestamp desc|dedup status
 DQL ---> fetch logs| filterOut log.source == "linux.log" | summarize count() ,by:log.source
 SPL ---> index=main source!="Linux.log" | stats count by source
 
+DQL ---> fetch logs| search "ERROR"
+SPL ---> index=main source="Linux.log" | search *linux*
+
