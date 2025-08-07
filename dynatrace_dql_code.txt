@@ -145,3 +145,7 @@ DQL ---> timeseries usage = avg(dt.host.cpu.usage), by:dt.entity.host, interval:
 
 DQL ---> data record(a=array(1,2),b="DQL"), record(a=array(3,4,5),b="Dynatrace Query Lanuage")| expand a
 SPL ---> | makeresults count=2| streamstats count as ED| eval a=case(ED=1, "1,2", ED=2, "3,4,5,6,")| eval b=case(ED=1, "Splunk",ED=2, "Splunk Query Language")| eval a=split(a,",")| mvexpand limit=5 a| table a b
+
+DQL ---> fetch logs| filter matchesValue(log.source,"apache.log") AND contains(content,"/favicon.ico")| summarize total_count=count()| filter total_count>500
+SPL ---> index="main" sourcetype="access_combined"| rex field=_raw "\"\w+\s(?<url>[^\s]+)\sHTTP" | stats count by url | where url ="/favicon.ico" | where count > 500
+
