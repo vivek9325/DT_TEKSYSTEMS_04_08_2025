@@ -135,3 +135,5 @@ SPL ---> | makeresults | eval key=1, value="a"| append [ makeresults | eval key=
 
 DQL ---> data record (key=1, value="a"), record(key=2, value="b"), record(key=3, value="c")
 | join [data record (key=2, cost=20), record(key=3, cost=30), record(key=4, cost=40)], on:{key}, kind:outer
+
+DQL ---> data record (key=1, value="a"), record(key=2, value="b"), record(key=3, value="c")| joinnested nestedrecord= [data record (key=2, cost=20), record(key=3, cost=30), record(key=4, cost=40)], on:{key}
