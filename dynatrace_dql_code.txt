@@ -119,3 +119,5 @@ DQL ---> data record(str="DQL is awesome")| fieldsAdd matchesPhrase(str,"DQL"), 
 DQL ---> data record(str="DQL is awesome")| fieldsAdd  replaceString(str,"awesome","simple")
 SPL ---> | makeresults| eval s1="DQL is Awesome"| eval replace_s1 = replace(s1,"Awesome","Simple")
 
+DQL ---> fetch logs| filter log.source=="linux.log"|summarize total_linux_count = count()| append [fetch logs | filter contains(log.source,"win") | summarize total_windows_count = count()]| fieldsAdd count = coalesce(total_linux_count,total_windows_count)
+SQL ---> index=main source="linux.log" | stats count as total_linux_log | append [ search index=main source="WinEvents.log"| stats count as total_win_count]
