@@ -137,3 +137,10 @@ DQL ---> data record (key=1, value="a"), record(key=2, value="b"), record(key=3,
 | join [data record (key=2, cost=20), record(key=3, cost=30), record(key=4, cost=40)], on:{key}, kind:outer
 
 DQL ---> data record (key=1, value="a"), record(key=2, value="b"), record(key=3, value="c")| joinnested nestedrecord= [data record (key=2, cost=20), record(key=3, cost=30), record(key=4, cost=40)], on:{key}
+
+DQL ---> timeseries usage = avg(dt.host.cpu.usage), by:dt.entity.host, interval:1h| fieldsAdd entityName(dt.entity.host) | filter contains(dt.entity.host.name,"easy")|fieldsAdd avg_usage = arrayAvg(usage) 
+
+DQL ---> timeseries usage = avg(dt.host.cpu.usage), by:dt.entity.host, interval:1h| fieldsAdd entityName(dt.entity.host) | filter contains(dt.entity.host.name,"easy")|fieldsAdd avg_usage = arrayAvg(usage)| fieldsAdd round_avg_usage = tolong(avg_usage)
+
+
+DQL ---> data record(a=array(1,2),b="DQL"), record(a=array(3,4,5),b="Dynatrace Query Lanuage")| expand a
