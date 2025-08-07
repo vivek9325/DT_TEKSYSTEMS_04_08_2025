@@ -144,3 +144,4 @@ DQL ---> timeseries usage = avg(dt.host.cpu.usage), by:dt.entity.host, interval:
 
 
 DQL ---> data record(a=array(1,2),b="DQL"), record(a=array(3,4,5),b="Dynatrace Query Lanuage")| expand a
+SPL ---> | makeresults count=2| streamstats count as ED| eval a=case(ED=1, "1,2", ED=2, "3,4,5,6,")| eval b=case(ED=1, "Splunk",ED=2, "Splunk Query Language")| eval a=split(a,",")| mvexpand limit=5 a| table a b
