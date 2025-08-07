@@ -149,3 +149,4 @@ SPL ---> | makeresults count=2| streamstats count as ED| eval a=case(ED=1, "1,2"
 DQL ---> fetch logs| filter matchesValue(log.source,"apache.log") AND contains(content,"/favicon.ico")| summarize total_count=count()| filter total_count>500
 SPL ---> index="main" sourcetype="access_combined"| rex field=_raw "\"\w+\s(?<url>[^\s]+)\sHTTP" | stats count by url | where url ="/favicon.ico" | where count > 500
 
+DQL ---> data record(r=record(a="DQL", b=1,c=record(d=0))),record(r=record(a="Dynatrace Query Language",b=2,c="1"))| fieldsFlatten r,depth:2
