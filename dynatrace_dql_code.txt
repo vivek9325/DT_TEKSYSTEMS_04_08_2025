@@ -126,3 +126,10 @@ SPL ---> index=main source="linux.log" | stats count as total_linux_log | append
 DQL ---> data record (key=1, value="a"), record(key=2, value="b"), record(key=3, value="c")| join [data record (key=2, cost=20), record(key=3, cost=30), record(key=4, cost=40)], on:{key}
 SPL ---> | makeresults | eval key=1, value="a"| append [ makeresults | eval key=2, value="b"]
 | append [ makeresults | eval key=3, value="c"]| fields -  _time| join key [  makeresults | eval key=2, cost=20| append [ makeresults | eval key=3, cost=30]| append [makeresults | eval key=4, cost=40]| fields key cost]| fields - _time
+
+
+DQL ---> data record (key=1, value="a"), record(key=2, value="b"), record(key=3, value="c")
+| join [data record (key=2, cost=20), record(key=3, cost=30), record(key=4, cost=40)], on:{key}, kind:leftOuter
+SPL ---> | makeresults | eval key=1, value="a"| append [ makeresults | eval key=2, value="b"]| append [ makeresults | eval key=3, value="c"]| fields -  _time| join key type=left [  makeresults | eval key=2, cost=20| append [ makeresultseval key=3, cost=30]| append [makeresults | eval key=4, cost=40]| fields key cost
+]| fields - _time
+
