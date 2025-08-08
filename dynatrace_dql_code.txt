@@ -171,3 +171,5 @@ DQL ---> data record (x=-0.5), record(x=0), record(x=0.5)| fieldsAdd ceil(x), fl
 DQL ---> fetch logs| limit 10| fieldsAdd randomValue=ceil(random()*100+1)
 
 DQL ---> data record(value="127.0.0.1"), record(value="10.0.0.5"),record(value="2001:0db8:0000:0000:0000:8a2e:0370:7334"), record(value="::1"), record(value = "317.0.0.1")| fieldsAdd ip(value)
+
+DQL ---> data record(value="127.1.2.3"), record(value="10.4.0.5"),record(value="2001:0db8:0000:0000:0000:8a2e:0370:7334"), record(value="::1"), record(value = "317.0.0.1")| fieldsAdd ip(value), ipMask(value,8), ipMask(value,16,ipv6MaskBits:32)
