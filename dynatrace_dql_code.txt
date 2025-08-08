@@ -158,3 +158,5 @@ DQL ---> data record(a=1), record(a=2), record(a=3), record(a=4)| summarize a_ar
 DQL ---> data record(value="DQL"),record(),record(value="null") | fieldsAdd isNull(value), isNotNull(value), isTrueOrNull(value)
 
 DQL ---> fetch logs | fieldsAdd entityName(dt.entity.host), entityName(dt.entity.aws_availability_zone)
+
+DQL ---> data record(a="java"), record(a="python"), record(a="DQL"), record(a="SPLUNK")| fieldsAdd in(a,{"java","go","splunk"})
