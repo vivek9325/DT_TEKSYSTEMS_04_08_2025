@@ -198,3 +198,20 @@ DQL ---> data record(timestamp=toTimestamp("2025-08-08T10:59:30.000-0400"))
 			
 DQL ---> data record(timeframe = timeframe(from:"2019-08-01T09:30:00", to:"2019-08-03T09:38:00"))| fieldsAdd getStart(timeframe), getEnd(timeframe), now()
 
+
+DQL ---> data record(location="Bangalore", state="KA"),
+      record(location="Mumbai", state="MH"),
+      record(location="Paris", state="PR")
+
+| fieldsAdd result=lookup([
+
+data record(city="Bangalore", country="India"),
+     record(city="Paris", country="France")
+],
+
+sourceField:location,
+lookupField:city
+)
+      
+	  
+	  
