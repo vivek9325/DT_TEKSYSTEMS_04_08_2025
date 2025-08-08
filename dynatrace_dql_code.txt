@@ -150,3 +150,11 @@ DQL ---> fetch logs| filter matchesValue(log.source,"apache.log") AND contains(c
 SPL ---> index="main" sourcetype="access_combined"| rex field=_raw "\"\w+\s(?<url>[^\s]+)\sHTTP" | stats count by url | where url ="/favicon.ico" | where count > 500
 
 DQL ---> data record(r=record(a="DQL", b=1,c=record(d=0))),record(r=record(a="Dynatrace Query Language",b=2,c="1"))| fieldsFlatten r,depth:2
+
+DQL ---> data record()| fieldsAdd a=array(2,3,7,7,1), field_a=array("Hello World")|fieldsAdd b=arrayAvg(a)| fieldsAdd c=arrayMax(a),d=arrayMin(a), e=arrayDistinct(a),arrayConcat(a,field_a)
+
+DQL ---> data record(a=1), record(a=2), record(a=3), record(a=4)| summarize a_array =collectArray(a)
+
+DQL ---> data record(value="DQL"),record(),record(value="null") | fieldsAdd isNull(value), isNotNull(value), isTrueOrNull(value)
+
+DQL ---> fetch logs | fieldsAdd entityName(dt.entity.host), entityName(dt.entity.aws_availability_zone)
