@@ -160,3 +160,6 @@ DQL ---> data record(value="DQL"),record(),record(value="null") | fieldsAdd isNu
 DQL ---> fetch logs | fieldsAdd entityName(dt.entity.host), entityName(dt.entity.aws_availability_zone)
 
 DQL ---> data record(a="java"), record(a="python"), record(a="DQL"), record(a="SPLUNK")| fieldsAdd in(a,{"java","go","splunk"})
+
+DQL ---> fetch logs | limit 1| fields exists(content), exists(timestamp), exists(severity)
+SPL ---> index=main | head 1 | where isnotnull(_raw) AND isnotnull(_time) AND isnotnull(severity)
