@@ -163,3 +163,11 @@ DQL ---> data record(a="java"), record(a="python"), record(a="DQL"), record(a="S
 
 DQL ---> fetch logs | limit 1| fields exists(content), exists(timestamp), exists(severity)
 SPL ---> index=main | head 1 | where isnotnull(_raw) AND isnotnull(_time) AND isnotnull(severity)
+
+DQL ---> data record (x=-42.13), record(x=0), record(x=6.234567)| fieldsAdd abs(x)
+
+DQL ---> data record (x=-0.5), record(x=0), record(x=0.5)| fieldsAdd ceil(x), floor(x)
+
+DQL ---> fetch logs| limit 10| fieldsAdd randomValue=ceil(random()*100+1)
+
+DQL ---> data record(value="127.0.0.1"), record(value="10.0.0.5"),record(value="2001:0db8:0000:0000:0000:8a2e:0370:7334"), record(value="::1"), record(value = "317.0.0.1")| fieldsAdd ip(value)
