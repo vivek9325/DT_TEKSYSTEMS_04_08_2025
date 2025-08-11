@@ -221,3 +221,7 @@ DQL ---> data record(text="1.2.3.4"), record(text="1.2.3.40"), record(text="1.2.
 
 DQL ---> data record(text="14/Mar/2016:23:37:06 +0200,INFO,mary01,200"),record(text="14/Mar/2016:23:37:07 +0200,INFO,,200"),record(text="14/Mar/2016:23:37:13 +0200,INFO,Vivek,500")
 | parse text, "HTTPDATE:date_field ',' LD:severity ',' LD?:username ',' INT:code"
+
+DQL ---> data record(text="2016-01-03 00:13:28,110.188.4.216,forerequest,200"),record(text="2016-01-06 06:35:24,48.242.116.66,unrioting,200"),record(text="2016-01-05 11:49:01,223.11.158.94,ribassano,404")
+| parse text, "TIMESTAMP:date ',' IPADDR:IP ',' LD:Username ',' "
+
