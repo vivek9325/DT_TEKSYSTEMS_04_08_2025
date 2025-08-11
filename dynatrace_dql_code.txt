@@ -264,3 +264,6 @@ DQL ---> data record(number="378282246310005"), record(number="3782 822463 10005
 DQL ---> data record(line="This is a string with UUID b79cb3ba-745e-5d9a-8903-4a02327a7e09 somewhere in the middle")
 | parse line, "LD UUIDSTRING:id LD"
 
+DQL ---> data record(line="101/102/103"), record(line="201//203//205"), record(line="/302/303/304")
+| parse line, "ARRAY {INT*:i '/'?}{3,5}:int_array"
+
