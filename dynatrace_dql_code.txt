@@ -236,4 +236,9 @@ record(text="2016-01-06 06:35:24,48.242.116.66,riotINg,200"),
 record(text="2016-01-05 11:49:01,223.11.158.94,iter,404")
 | parse text, "TIMESTAMP:time ',' IPADDR:ip ',' LOWER{4,15}:username ','"
 
-
+DQL ---> data record(text="2019-01-01T13:23:45Z"), record(text="26/Dec/2018:02:59:40 +0100"), record(text="2019-01-01T01:01:01.123PST"), 
+record(text="Do, 24 Mai 2018 14:30:34 CET")
+| parse text, "ISO8601:ISO_parsed_timestamp"
+| parse text, "HTTPDATE:httpdate_parsed"
+| parse text, "JSONTIMESTAMP:json_timestamp"
+| parse text, "TIMESTAMP('EEE, d MMM yyyy HH:mm:ss Z', locale='de'):timestamp"
