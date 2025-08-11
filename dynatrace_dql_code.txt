@@ -267,3 +267,15 @@ DQL ---> data record(line="This is a string with UUID b79cb3ba-745e-5d9a-8903-4a
 DQL ---> data record(line="101/102/103"), record(line="201//203//205"), record(line="/302/303/304")
 | parse line, "ARRAY {INT*:i '/'?}{3,5}:int_array"
 
+DQL ---> data record(line="101/102//103//105"), record(line="201//203//205"), record(line="/302/303/304")
+| parse line, "ARRAY {INT*:i '/'?}{3,7}:int_array"
+
+DQL ---> data record(text="Alice;success;all good"),
+record(text="Bob;Wrong password;attempts left 2"),
+record(text="Oscar;tech error;"),
+record(text="Mallory;;doodaloo")
+| parse text, "LD:username ';' ENUM{''=-3,'success'=0, 'wrong password'=1, 'tech error'=2}(cis=true):result ';' LD?:comment"
+
+DQL ---> data record(text="1,red fox jumps"),
+record(text="2,over lazy dog")
+| parse text, "STRUCTURE{int:i ',' LD:string}:struct"
