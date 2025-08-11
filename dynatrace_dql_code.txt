@@ -251,3 +251,12 @@ record(number="3"),
 record(number="4.7564"),
 record(number="8.9845672")
 | parse number, "float(min=1, max=3):f"
+
+
+DQL ---> data record(ip="192.168.33.1"), record(ip="1080:0:0:0:8:800:200C:417A")
+| parse ip, "IPADDR:both_ip"
+| parse ip, "IPV4:ipv4"
+| parse ip, "IPV6:ipv6"
+
+DQL ---> data record(number="378282246310005"), record(number="3782 822463 10005"), record(number="38520000023236"), record(number="4917%206100%200000%200000%20003")
+| parse number, "CREDITCARD:cc"
