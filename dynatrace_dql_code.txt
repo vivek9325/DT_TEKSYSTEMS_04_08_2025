@@ -242,3 +242,12 @@ record(text="Do, 24 Mai 2018 14:30:34 CET")
 | parse text, "HTTPDATE:httpdate_parsed"
 | parse text, "JSONTIMESTAMP:json_timestamp"
 | parse text, "TIMESTAMP('EEE, d MMM yyyy HH:mm:ss Z', locale='de'):timestamp"
+
+
+DQL ---> data record(number="1"),
+record(number="0.7564"),
+record(number="1.5"),
+record(number="3"),
+record(number="4.7564"),
+record(number="8.9845672")
+| parse number, "float(min=1, max=3):f"
