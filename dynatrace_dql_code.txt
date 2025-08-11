@@ -260,3 +260,7 @@ DQL ---> data record(ip="192.168.33.1"), record(ip="1080:0:0:0:8:800:200C:417A")
 
 DQL ---> data record(number="378282246310005"), record(number="3782 822463 10005"), record(number="38520000023236"), record(number="4917%206100%200000%200000%20003")
 | parse number, "CREDITCARD:cc"
+
+DQL ---> data record(line="This is a string with UUID b79cb3ba-745e-5d9a-8903-4a02327a7e09 somewhere in the middle")
+| parse line, "LD UUIDSTRING:id LD"
+
