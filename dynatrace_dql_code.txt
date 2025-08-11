@@ -228,3 +228,12 @@ DQL ---> data record(text="2016-01-03 00:13:28,110.188.4.216,forerequest,200"),r
 DQL ---> data record(text="2016-01-03 00:13:28,110.188.4.216,forerequest,200"),record(text="2016-01-06 06:35:24,48.242.116.66,02rioting,200"),record(text="2016-01-05 11:49:01,223.11.158.94,ribassano,404"),record(text="2016-01-03 00:13:28,110.188.4.216,vivek,200"),record(text="2016-01-06 06:35:24,48.242.116.66,riotINg,200"),record(text="2016-01-05 11:49:01,223.11.158.94,RiBassano,404")
 | parse text, "TIMESTAMP:time ',' IPADDR:ip ',' LOWER{4,15}?:username ','"
 
+DQL ---> data record(text="2016-01-03 00:13:28,110.188.4.216,forerequest,200"),
+record(text="2016-01-06 06:35:24,48.242.116.66,02rioting,200"),
+record(text="2016-01-05 11:49:01,223.11.158.94,ribassano,404"),
+record(text="2016-01-03 00:13:28,110.188.4.216,vivek,200"),
+record(text="2016-01-06 06:35:24,48.242.116.66,riotINg,200"),
+record(text="2016-01-05 11:49:01,223.11.158.94,iter,404")
+| parse text, "TIMESTAMP:time ',' IPADDR:ip ',' LOWER{4,15}:username ','"
+
+
