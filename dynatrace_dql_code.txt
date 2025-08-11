@@ -214,4 +214,7 @@ lookupField:city
 )
       
 	  
-	  
+DQL ---> data record(text="1,10.0.0.5")| parse text, "INT:number ',' IPADDR:ip"
+SPL ---> | makeresults| eval text="1,10.0.0.5"| rex field=text "(?P<number>\d),(?P<ip>.*)"
+
+DQL ---> data record(text="1.2.3.4"), record(text="1.2.3.40"), record(text="1.2.3.55") | parse text, "IPADDR:ip_address <<INT(min=50)"
