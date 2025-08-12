@@ -86,3 +86,12 @@ fetch logs
 
 =====================================================================================================================
 
+SPL --->
+
+index="main" sourcetype="access_combined" 
+| rex field=_raw "\"\w+\s(?<url>[^\s]+)" 
+| where url like "%.exe" OR url like "%.sh" OR url like "%.php" 
+| stats count by url
+
+DQL --->
+
