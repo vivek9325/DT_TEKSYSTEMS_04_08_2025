@@ -95,3 +95,56 @@ index="main" sourcetype="access_combined"
 
 DQL --->
 
+fetch logs
+| filter matchesValue(log.source, "apache.log")
+| parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD:url 'HTTP/'"
+| parse url, "LD SPACE LD:url"
+| fieldsAdd php=contains(url,".php"), exe=contains(url,".exe"), sh=contains(url,".sh")
+| filter php==true OR exe==true OR sh==true
+| summarize total_count=count(), by:{url}
+
+=====================================================================================================================
+
+SPL --->
+
+index="main" sourcetype="access_combined" 
+| rex field=_raw "\"\w+\s(?<url>[^\s]+)\sHTTP" 
+| stats count by url 
+| where url ="/favicon.ico" 
+| where count > 500
+
+
+DQL --->
+
+fetch logs
+| filter matchesValue(log.source, "apache.log")
+| parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD:url 'HTTP/'"
+| parse url, "LD SPACE LD:url"
+| filter contains(url, "/favicon.ico")
+| summarize total_count=count(), by:{url}
+| filter total_count>500
+
+======================================================================================================================
+SPL --->
+
+index="main" sourcetype="access_combined"
+|rex field=_raw "\"\w+\s(?&lt;url&gt;[^\s]+)\sHTTP/[^\"]+\"\s(?&lt;status&gt;\d{3})"
+|rex field=_raw "^(?&lt;client_ip&gt;\d{1,3}(?:\.\d{1,3}){3})" 
+| where status="404"
+|stats count by url
+|rename url as result, count as occurences 
+|eval type="Top 404 URLS"
+
+DQL --->
+
+fetch logs
+| filter matchesValue(log.source, "apache.log")
+| parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD:url 'HTTP/' LD SPACE INT:status SPACE LD"
+| parse url, "LD SPACE LD:url"
+| filter status==404
+| summarize occurences=count() ,by:{url}
+| fieldsRename result=url
+|fieldsAdd type="Top 404 URLS"
+
+=====================================================================================================================
+
