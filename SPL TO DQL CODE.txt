@@ -18,3 +18,24 @@ fetch logs
 | filter matchesValue(log.source, "apache.log")
 | parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD 'HTTP/' LD SPACE INT:status LD"
 | summarize numOf200Errors=countIf(status==200), numOf404Errors=countIf(status==404), numOf301Errors=countIf(status==301), numOf206Errors=countIf(status==206), numOf403Errors=countIf(status==403), by:{clientip}
+
+
+======================================================================================================================
+
+SPL ---> 
+
+index="main" sourcetype="access_combined" 
+| rex field=_raw "^(?<client_ip>\d{1,3}(?:\.\d{1,3}){3})" 
+| stats count by client_ip 
+| sort -count 
+| head 10
+
+
+DQL --->
+
+fetch logs
+| filter matchesValue(log.source, "apache.log")
+| parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD 'HTTP/' LD SPACE INT LD"
+| summarize total_count=count(), by:{clientip}
+| sort - total_count
+| limit 10
