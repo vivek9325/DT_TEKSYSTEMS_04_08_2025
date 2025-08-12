@@ -39,3 +39,24 @@ fetch logs
 | summarize total_count=count(), by:{clientip}
 | sort - total_count
 | limit 10
+
+=======================================================================================================================
+SPL --->
+
+index="main" sourcetype="access_combined" 
+| rex field=_raw "\"\w+\s[^\"]+\"\s(?<status>\d{3})\s" 
+| search status=404 
+| stats count as error_404_count by clientip, referer_domain
+
+DQL ---> 
+
+fetch logs
+| filter matchesValue(log.source, "apache.log")
+| parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD 'HTTP/' LD SPACE INT:status SPACE INT LD:url SPACE"
+| parse url,"LD:referer_domain'.com'"
+| fieldsAdd new_referer_domain = concat("http://",referer_domain,".com")
+| filterOut new_referer_domain=="http://.com"
+| summarize total_count=countIf(status==404), by:{clientip,referer_domain}
+| parse referer_domain, "LD '/' LD:referer_domain"
+| fieldsAdd referer_domain=concat("http:/",referer_domain,".com")
+| fields clientip, referer_domain, total_count
