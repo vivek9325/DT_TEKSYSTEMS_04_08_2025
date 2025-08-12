@@ -60,3 +60,29 @@ fetch logs
 | parse referer_domain, "LD '/' LD:referer_domain"
 | fieldsAdd referer_domain=concat("http:/",referer_domain,".com")
 | fields clientip, referer_domain, total_count
+
+=====================================================================================================================
+
+SPL --->
+
+index="main" sourcetype="access_combined" 
+| rex field=_raw "^(?<client_ip>\d{1,3}(?:\.\d{1,3}){3})" 
+| stats count by client_ip useragent 
+| sort -count 
+| head 10
+
+DQL --->
+
+fetch logs
+| filter matchesValue(log.source, "apache.log")
+| parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD 'HTTP/' LD SPACE INT:status SPACE INT LD:url"
+| parse url, "LD SPACE LD:useragent"
+| parse useragent, "DQS:useragent"
+| summarize total_count=count(), by:{clientip,useragent}
+| filterOut useragent=="-"
+| sort - total_count
+| filter isNotNull(useragent)
+| limit 10
+
+=====================================================================================================================
+
