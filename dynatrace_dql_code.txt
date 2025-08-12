@@ -278,3 +278,24 @@ record(text="Mallory;;doodaloo")
 DQL ---> data record(text="1,red fox jumps"),
 record(text="2,over lazy dog")
 | parse text, "STRUCTURE{int:i ',' LD:string}:struct"
+
+
+DQL ---> DQL ---> fetch logs
+| filter matchesValue(log.source, "winevents.log")
+| sort timestamp desc
+| parse content, "JSON{
+INT:SeverityValue
+}:severity"
+
+
+DQL ---> fetch logs
+| filter matchesValue(log.source, "winevents.log")
+| sort timestamp desc
+| parse content, "JSON{
+INT:SeverityValue,
+LD:Hostname,
+LD:Severity,
+LD:ProviderGuid
+}:severity"
+| fieldsAdd severity[SeverityValue], severity[Hostname], severity[Severity], ProviderGuid=severity[ProviderGuid]
+| parse ProviderGuid,"'{'UUIDSTRING:ProviderGuid '}'"
