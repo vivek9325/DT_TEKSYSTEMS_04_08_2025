@@ -299,3 +299,4 @@ LD:ProviderGuid
 }:severity"
 | fieldsAdd severity[SeverityValue], severity[Hostname], severity[Severity], ProviderGuid=severity[ProviderGuid]
 | parse ProviderGuid,"'{'UUIDSTRING:ProviderGuid '}'"
+

@@ -1,0 +1,20 @@
+SPL --->
+
+index="main" sourcetype="access_combined" 
+| rex field=_raw "\"\w+\s[^\"]+\"\s(?<status>\d{3})\s" 
+| chart
+    eval(round(avg(req_time),2)) as avgSVCTime
+    count(eval(status=200)) as numOf200Errors,
+    count(eval(status=404)) as numOf404Errors,
+    count(eval(status=301)) as numOf301Errors,
+    count(eval(status=206)) as numOf206Errors,
+    count(eval(status=403)) as numOf403Errors,
+    by clientip 
+| fields - avgSVCTime
+
+DQL --->
+
+fetch logs
+| filter matchesValue(log.source, "apache.log")
+| parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD 'HTTP/' LD SPACE INT:status LD"
+| summarize numOf200Errors=countIf(status==200), numOf404Errors=countIf(status==404), numOf301Errors=countIf(status==301), numOf206Errors=countIf(status==206), numOf403Errors=countIf(status==403), by:{clientip}
