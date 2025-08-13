@@ -1,0 +1,262 @@
+{
+  "metadata": {
+    "configurationVersions": [
+      7
+    ],
+    "clusterVersion": "1.320.39.20250809-023456"
+  },
+  "id": "efcf5ad8-1bd8-444b-b89a-dc93afbc7e33",
+  "dashboardMetadata": {
+    "name": "Infra Monitoring Dashboard",
+    "shared": true,
+    "owner": "loseg45030@blaxion.com",
+    "dashboardFilter": {
+      "timeframe": "-2h"
+    },
+    "tags": [
+      "test",
+      "infra"
+    ],
+    "preset": true,
+    "dynamicFilters": {
+      "filters": [
+        "CUSTOM_DIMENSION:ActiveGate",
+        "CUSTOM_DIMENSION:Host"
+      ],
+      "genericTagFilters": []
+    },
+    "hasConsistentColors": false
+  },
+  "tiles": [
+    {
+      "name": "Markdown",
+      "tileType": "MARKDOWN",
+      "configured": true,
+      "bounds": {
+        "top": 0,
+        "left": 0,
+        "width": 1444,
+        "height": 190
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "markdown": "# **Infra Monitoring -** \nAn [infrastructure monitoring](https://dynatrace.com) dashboard provides a centralized, real-time view of the health, performance, and availability of an organization’s IT assets, including servers, network devices, cloud resources, containers, and applications. It consolidates critical metrics such as CPU and memory usage, disk space, network throughput, latency, error rates, and service status into intuitive visualizations like graphs, heatmaps, and gauges. By presenting this data in a single interface, the dashboard enables quick identification of performance bottlenecks, resource overutilization, or potential failures. It also supports proactive incident management through integrated alerts and trend analysis, helping IT teams detect anomalies before they escalate into major outages. Ultimately, an infrastructure monitoring dashboard serves as the nerve center for operational visibility, ensuring optimal performance, security, and reliability of IT systems."
+    },
+    {
+      "name": "CPU Usage",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 190,
+        "left": 0,
+        "width": 342,
+        "height": 266
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "CPU Usage",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:host.cpu.usage",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": false,
+          "showSparkLine": false,
+          "linkTileColorToThreshold": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "value": 0,
+                "color": "#7dc540"
+              },
+              {
+                "value": 20,
+                "color": "#f5d30f"
+              },
+              {
+                "value": 40,
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=Inf&(builtin:host.cpu.usage:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Disk Usage",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 190,
+        "left": 342,
+        "width": 380,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": "-6h"
+      },
+      "isAutoRefreshDisabled": false,
+      "customName": "Disk Usage",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:host.disk.usedPct",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "dt.entity.disk"
+          ],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "unitTransform": "auto",
+            "valueFormat": "auto",
+            "properties": {
+              "color": "BLUE",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "value": -1,
+                "color": "#7dc540"
+              },
+              {
+                "value": 5,
+                "color": "#f5d30f"
+              },
+              {
+                "value": 20,
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(builtin:host.disk.usedPct:splitBy(\"dt.entity.disk\"):sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    }
+  ]
+}
