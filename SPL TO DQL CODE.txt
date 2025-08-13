@@ -148,3 +148,22 @@ fetch logs
 
 =====================================================================================================================
 
+SPL --->
+
+index=main source=Sample_tickets.csv 
+| table ticket_number 
+| join ticket_number type=inner 
+    [ search index=main source=Sample_lookup.csv 
+    | table ticket_number, time_taken]
+	
+DQL ---> 
+
+fetch logs
+| filter matchesValue(log.source, "sample_tickets.csv")
+| sort timestamp desc
+| parse content, "LD ',INC' LD:ticket_number ',' LD"
+| fieldsAdd ticket_number = concat("INC",ticket_number)
+| join [fetch logs
+| filter matchesValue(log.source, "sample_lookup.csv")
+| sort timestamp desc
+| parse content, "LD:ticket_number ',' LD:time_taken"] , on:{ticket_number}, kind:{inner}
