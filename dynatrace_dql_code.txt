@@ -318,3 +318,20 @@ INT : RecordNumber
 
 DQL ---> timeseries host_cpu = avg(dt.host.cpu.usage)
 | fieldsAdd avg_cpu_usage = arrayAvg(host_cpu)
+
+timeseries host_cpu = avg(dt.host.cpu.usage), default:0, rollup:avg, interval:3h
+| fieldsAdd avg_cpu_usage = arrayAvg(host_cpu)
+
+timeseries host_cpu = avg(dt.host.cpu.usage), rollup:avg, interval:3h
+| fieldsAdd avg_cpu_usage = arrayAvg(host_cpu)
+
+timeseries host_cpu = avg(dt.host.cpu.usage), default:0, rollup:avg, bins:12
+
+
+
+DQL ---> fetch logs
+| filter matchesValue(log.source, "sample_tickets.csv")
+| parse content, "LD ',INC' LD:ticket_number ',' LD"
+| fieldsAdd ticket_number = concat("INC",ticket_number)
+| join [fetch logs | filter contains(log.source,"sample_lookup.csv")
+| parse content,"LD:ticket_number ',' LD:time_taken"], on:{ticket_number}, kind:{inner}
