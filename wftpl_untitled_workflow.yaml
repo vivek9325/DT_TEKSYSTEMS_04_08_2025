@@ -1,0 +1,80 @@
+metadata:
+  version: "1"
+  dependencies:
+    apps:
+      - id: dynatrace.automations
+        version: ^1.2020.0
+      - id: dynatrace.email
+        version: ^1.6.0
+      - id: dynatrace.jira
+        version: ^5.3.0
+  inputs: []
+workflow:
+  title: Untitled workflow
+  tasks:
+    send_email_1:
+      name: send_email_1
+      description: Send email
+      action: dynatrace.email:send-email
+      active: false
+      input:
+        cc: []
+        to:
+          - vivek9325@gmail.com
+        bcc: []
+        content: Favicon count is greater than 500
+        subject: Favicon greater {{ result("favicon_greater_than_500") }}
+      position:
+        x: 0
+        y: 2
+      predecessors:
+        - favicon_greater_than_500
+      conditions:
+        states:
+          favicon_greater_than_500: OK
+    create_issue__1:
+      name: create_issue__1
+      description: Create new Jira issue with various fields
+      action: dynatrace.jira:jira-create-issue
+      position:
+        x: -1
+        y: 2
+      predecessors:
+        - favicon_greater_than_500
+      conditions:
+        states:
+          favicon_greater_than_500: OK
+    favicon_greater_than_500:
+      name: favicon_greater_than_500
+      description: Make use of Dynatrace Grail data in your workflow.
+      action: dynatrace.automations:execute-dql-query
+      input:
+        query: |-
+          fetch logs
+          | filter matchesValue(log.source, "apache.log")
+          | parse content, "IPADDR:clientip LD '[' HTTPDATE ']' LD:url 'HTTP/'"
+          | parse url, "LD SPACE LD:url"
+          | filter contains(url, "/favicon.ico")
+          | summarize total_count=count(), by:{url}
+          | filter total_count>500
+      position:
+        x: 0
+        y: 1
+      predecessors: []
+  description: ""
+  trigger:
+    schedule:
+      rule: null
+      trigger:
+        type: cron
+        cron: "*/2 * * * *"
+      timezone: Asia/Calcutta
+      isActive: true
+      isFaulty: false
+      filterParameters: {}
+      inputs: {}
+  schemaVersion: 3
+  result: null
+  input: {}
+  hourlyExecutionLimit: 1000
+  type: STANDARD

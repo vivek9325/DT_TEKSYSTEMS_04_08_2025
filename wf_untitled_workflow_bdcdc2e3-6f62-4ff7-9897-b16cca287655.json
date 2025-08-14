@@ -1,0 +1,87 @@
+{
+  "id": "bdcdc2e3-6f62-4ff7-9897-b16cca287655",
+  "title": "Untitled workflow",
+  "tasks": {
+    "send_email_1": {
+      "name": "send_email_1",
+      "input": {
+        "cc": [],
+        "to": [
+          "vivek9325@gmail.com"
+        ],
+        "bcc": [],
+        "content": "Favicon count is greater than 500",
+        "subject": "Favicon greater {{ result(\"favicon_greater_than_500\") }}"
+      },
+      "action": "dynatrace.email:send-email",
+      "active": false,
+      "position": {
+        "x": 0,
+        "y": 2
+      },
+      "conditions": {
+        "states": {
+          "favicon_greater_than_500": "OK"
+        }
+      },
+      "description": "Send email",
+      "predecessors": [
+        "favicon_greater_than_500"
+      ]
+    },
+    "create_issue__1": {
+      "name": "create_issue__1",
+      "action": "dynatrace.jira:jira-create-issue",
+      "position": {
+        "x": -1,
+        "y": 2
+      },
+      "conditions": {
+        "states": {
+          "favicon_greater_than_500": "OK"
+        }
+      },
+      "description": "Create new Jira issue with various fields",
+      "predecessors": [
+        "favicon_greater_than_500"
+      ]
+    },
+    "favicon_greater_than_500": {
+      "name": "favicon_greater_than_500",
+      "input": {
+        "query": "fetch logs\n| filter matchesValue(log.source, \"apache.log\")\n| parse content, \"IPADDR:clientip LD '[' HTTPDATE ']' LD:url 'HTTP/'\"\n| parse url, \"LD SPACE LD:url\"\n| filter contains(url, \"/favicon.ico\")\n| summarize total_count=count(), by:{url}\n| filter total_count>500"
+      },
+      "action": "dynatrace.automations:execute-dql-query",
+      "position": {
+        "x": 0,
+        "y": 1
+      },
+      "description": "Make use of Dynatrace Grail data in your workflow.",
+      "predecessors": []
+    }
+  },
+  "description": "",
+  "actor": "300215df-b2a8-489c-a457-b50ed33e6ca3",
+  "owner": "300215df-b2a8-489c-a457-b50ed33e6ca3",
+  "ownerType": "USER",
+  "isPrivate": true,
+  "trigger": {
+    "schedule": {
+      "isActive": true,
+      "isFaulty": false,
+      "trigger": {
+        "cron": "*/2 * * * *",
+        "type": "cron"
+      },
+      "rule": null,
+      "filterParameters": {},
+      "timezone": "Asia/Calcutta",
+      "inputs": {}
+    }
+  },
+  "schemaVersion": 3,
+  "result": null,
+  "input": {},
+  "hourlyExecutionLimit": 1000,
+  "type": "STANDARD"
+}
