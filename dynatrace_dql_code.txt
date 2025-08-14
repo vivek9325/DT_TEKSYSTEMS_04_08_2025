@@ -316,3 +316,5 @@ INT : RecordNumber
 | fieldsAdd recordNumber = json_data[RecordNumber]
 | summarize unique_record = countDistinct(recordNumber)]
 
+DQL ---> timeseries host_cpu = avg(dt.host.cpu.usage)
+| fieldsAdd avg_cpu_usage = arrayAvg(host_cpu)
