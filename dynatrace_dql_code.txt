@@ -300,3 +300,19 @@ LD:ProviderGuid
 | fieldsAdd severity[SeverityValue], severity[Hostname], severity[Severity], ProviderGuid=severity[ProviderGuid]
 | parse ProviderGuid,"'{'UUIDSTRING:ProviderGuid '}'"
 
+
+DQL ---> fetch logs
+| filter log.source=="winevents.log"
+| parse content,"JSON{
+LD:Severity
+}:json_data"
+| fieldsAdd severity=json_data[Severity]
+| summarize severity_count=count(), by:{severity}
+| append[fetch logs
+| filter log.source=="winevents.log"
+| parse content,"JSON{
+INT : RecordNumber
+}:json_data"
+| fieldsAdd recordNumber = json_data[RecordNumber]
+| summarize unique_record = countDistinct(recordNumber)]
+
